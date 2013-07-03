@@ -1,0 +1,15 @@
+---
+package:
+    name: evo-elements
+    version: 0.0.1
+
+sources:
+    - file: evo-elements-0.0.1.tgz
+      digest: sha1:e085b6c5018b8de2cfaf5f38b8a281cc8cccafa7
+      origins:
+        - http://registry.npmjs.org/evo-elements/-/evo-elements-0.0.1.tgz
+
+build:
+    - engine: shell
+      commands:
+        - tar zvxf $BUILD_SRCDIR/evo-elements-0.0.1.tgz

@@ -1,0 +1,16 @@
+---
+package:
+    name: evo-neuron
+    version: 0.0.2
+    dependencies:
+        - evo-elements: 0.0.2
+
+sources:
+    - file: evo-neuron-0.0.2.zip
+      origins:
+        - http://github.com/evo-cloud/neuron/archive/master.zip
+
+build:
+    - engine: shell
+      commands:
+        - unzip $BUILD_SRCDIR/evo-neuron-0.0.2.zip

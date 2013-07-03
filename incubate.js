@@ -11,9 +11,21 @@ var os       = require('os'),
     
 var App = Class({
     constructor: function () {
-        this.packages = new Packages(conf.query('package.path', ['./packages']).map(function (dir) { return path.resolve(dir); }));
-        this.cache = new FileCache(path.resolve(conf.query('package.cache', path.join('./_build', 'cache'))),
-                                   Math.min(conf.query('parallel', os.cpus().length), conf.query('parallelMax', 4)));
+        this.cfg = {
+            pkgPaths: conf.query('package.path', ['./packages']),
+            cacheDir: path.resolve(conf.query('package.cache', path.join('_build', 'cache'))),
+            buildDir: path.resolve(conf.query('build.dir', '_build')),
+            parallel: parseInt(conf.query('parallel')),
+            parallelMax: parseInt(conf.query('parallelMax'))
+        };
+        Array.isArray(this.cfg.pkgPaths) || (this.cfg.pkgPaths = [this.cfg.pkgPaths]);
+        this.cfg.pkgPaths = this.cfg.pkgPaths.map(function (dir) { return path.resolve(dir); });
+        isNaN(this.cfg.parallel) && (this.cfg.parallel = os.cpus().length);
+        isNaN(this.cfg.parallelMax) && (this.cfg.parallelMax = 4);
+        this.cfg.parallel > this.cfg.parallelMax && (this.cfg.parallel = this.cfg.parallelMax);
+        
+        this.packages = new Packages(this.cfg.pkgPaths);
+        this.cache = new FileCache(this.cfg.cacheDir, this.cfg.parallel);
     },
     
     run: function () {
@@ -70,7 +82,7 @@ var App = Class({
         async.whilst(
             function () { return !order.empty; },
             function (next) {
-                var pkgs = order.fetch(conf.query('parallel', os.cpus().length));
+                var pkgs = order.fetch(this.cfg.parallel);
                 async.each(pkgs, this._buildPkg.bind(this), function (err) {
                     pkgs.forEach(function (pkg) { order.complete(pkg); });
                     next(err);
@@ -81,7 +93,8 @@ var App = Class({
     },
     
     _buildPkg: function (pkg, done) {
-        BuildEngine.build(pkg, this.cache.basedir(pkg), path.resolve(conf.query('build.dir', './_build')), done);
+        console.log('BUILD ' + pkg.fullName);        
+        BuildEngine.build(pkg, this.cache.basedir(pkg), this.cfg.buildDir, done);
     }
 });
 

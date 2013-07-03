@@ -1,0 +1,14 @@
+---
+package:
+    name: evo-elements
+    version: 0.0.2
+
+sources:
+    - file: evo-elements-0.0.2.zip
+      origins:
+        - http://github.com/evo-cloud/elements/archive/master.zip
+
+build:
+    - engine: shell
+      commands:
+        - unzip $BUILD_SRCDIR/evo-elements-0.0.2.zip

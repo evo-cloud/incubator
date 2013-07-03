@@ -1,0 +1,16 @@
+---
+package:
+    name: microscope
+    version: 0.0.1
+    dependencies:
+        - evo-elements
+
+sources:
+    - file: microscope-0.0.1.zip
+      origins:
+        - http://github.com/evo-cloud/microscope/archive/master.zip
+
+build:
+    - engine: shell
+      commands:
+        - unzip $BUILD_SRCDIR/microscope-0.0.1.zip

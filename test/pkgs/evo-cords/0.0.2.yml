@@ -1,0 +1,16 @@
+---
+package:
+    name: evo-cords
+    version: 0.0.2
+    dependencies:
+        - evo-neuron: 0.0.2
+
+sources:
+    - file: evo-cords-0.0.2.zip
+      origins:
+        - http://github.com/evo-cloud/cords/archive/master.zip
+
+build:
+    - engine: shell
+      commands:
+        - unzip $BUILD_SRCDIR/evo-cords-0.0.2.zip
