@@ -141,8 +141,16 @@ describe('Packages', function () {
     
     it('#order', function () {
         packages.load('c-0.0.1');
-        var order = packages.order().map(function (pkg) { return pkg.fullName; });
-        assert.deepEqual(order.slice(0, 2), ['a-1.2.0', 'a-1.0.0']);
-        assert.equal(order[4], 'c-0.0.1');
+        var order = packages.order();
+        var names = [];
+        while (!order.empty) {
+            var pkgs = order.fetch();
+            assert.ok(pkgs);
+            assert.notEqual(pkgs.length, 0);
+            pkgs.forEach(function (pkg) { names.push(pkg.fullName); });
+            order.complete(pkgs);
+        }
+        assert.deepEqual(names.slice(0, 2), ['a-1.2.0', 'a-1.0.0']);
+        assert.equal(names[4], 'c-0.0.1');
     });
 });
