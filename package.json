@@ -25,8 +25,9 @@
         "mkdirp": "0.3.5",
         "rmdir": "1.0.0",
         "bytes": "0.2.1",
+        "term-dashboard": "git://github.com/easeway/term-dashboard",
+        "cli-color": "0.2.2",
         "http-get": "0.5.10",
-        "multimeter": "0.1.1",
         "evo-elements": "git://github.com/evo-cloud/elements"
     },
     "devDependencies": {
