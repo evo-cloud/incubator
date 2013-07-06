@@ -122,7 +122,13 @@ var dashboard = new Dashboard({
             colFilename(),
             { renderer: 'progressbar', key: ['downloaded', 'size'] },
             { text: function (data) { return Math.floor(data.downloaded * 100 / data.size) + '%'; }, width: 6 },
-            { text: function (data) { return (bytes(data.downloaded) + ' / ' + bytes(data.size)).toUpperCase(); }, width: 20 }
+            {
+                text: function (data) {
+                        return data.size ? (bytes(data.downloaded) + ' / ' + bytes(data.size)).toUpperCase()
+                                         : bytes(data.downloaded).toUpperCase();
+                    },
+                width: 20
+            }
         ],
         'build-prepare': [
             colWorkerId(),            
@@ -140,7 +146,7 @@ var dashboard = new Dashboard({
             colAction('BUILD', 'green'),
             colPackage(),
             colSteps(),
-            { key: 'command', clip: 'ellipsis' }
+            { key: 'message', clip: 'ellipsis' }
         ],
         'build-finishing': [
             colWorkerId(),            
@@ -175,7 +181,10 @@ var translates = {
     build: function (msg) {
         msg.pkgName = msg.pkg.fullName;
         msg.totalSteps = msg.pkg.buildSteps.length;
-        msg.stepEvent == 'command' && (msg.command = msg.params.command);
+        switch (msg.stepEvent) {
+            case 'command': msg.message = msg.params.command; break;
+            case 'error': msg.message = msg.params.error.message; break;
+        }
         msg.error && (msg.message = msg.error.message);
         return msg;
     }

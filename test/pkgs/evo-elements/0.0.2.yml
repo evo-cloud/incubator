@@ -11,4 +11,4 @@ sources:
 build:
     - engine: shell
       commands:
-        - unzip $BUILD_SRCDIR/evo-elements-0.0.2.zip
+        - unzip $_SRCDIR/evo-elements-0.0.2.zip

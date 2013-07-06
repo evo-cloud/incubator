@@ -13,4 +13,4 @@ sources:
 build:
     - engine: shell
       commands:
-        - unzip $BUILD_SRCDIR/evo-neuron-0.0.2.zip
+        - unzip $_SRCDIR/evo-neuron-0.0.2.zip

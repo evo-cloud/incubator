@@ -13,4 +13,4 @@ sources:
 build:
     - engine: shell
       commands:
-        - unzip $BUILD_SRCDIR/microscope-0.0.1.zip
+        - unzip $_SRCDIR/microscope-0.0.1.zip

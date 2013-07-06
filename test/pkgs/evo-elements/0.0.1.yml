@@ -12,4 +12,4 @@ sources:
 build:
     - engine: shell
       commands:
-        - tar zvxf $BUILD_SRCDIR/evo-elements-0.0.1.tgz
+        - tar zvxf $_SRCDIR/evo-elements-0.0.1.tgz
