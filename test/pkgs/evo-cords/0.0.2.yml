@@ -15,4 +15,7 @@ build:
       commands:
         - unzip $_SRCDIR/evo-cords-0.0.2.zip
         - "echo This is from stderr 2>&1"
+        - >
+            echo Merge multi lines
+            the second line
         - sleep 1
