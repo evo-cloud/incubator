@@ -9,7 +9,8 @@ var cfg = {
     buildDir: conf.query('build.dir', '_build'),
     cacheDir: conf.query('package.cache'),
     parallel: conf.query('parallel'),
-    parallelMax: conf.query('parallelMax')
+    parallelMax: conf.query('parallelMax'),
+    cleanBuild: conf.query('cleanBuild')
 };
 
 if (!cfg.pkgPaths) {
@@ -52,7 +53,7 @@ function colSteps() {
         text: function (data) {
             return data.stepIndex + '/' + data.totalSteps;
         },
-        width: 10,
+        width: 6,
         align: 'right'
     };
 }
@@ -60,7 +61,7 @@ function colSteps() {
 var dashboard = new Dashboard({
     views: {
         'header': [
-            { key: 'title', width: 15, fg: 'brightWhite', styles: ['underline'] },
+            { key: 'title', width: 12, fg: 'brightWhite', styles: ['underline'] },
             { key: 'action', fg: 'cyan', styles: ['bold'] }
         ],
         'footer': [
