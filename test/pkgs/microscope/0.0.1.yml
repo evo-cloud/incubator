@@ -14,3 +14,4 @@ build:
     - engine: shell
       commands:
         - unzip $_SRCDIR/microscope-0.0.1.zip
+        - exit 1

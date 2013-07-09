@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var conf      = require('evo-elements').Config.conf(),
     Dashboard = require('term-dashboard').Dashboard,
     bytes     = require('bytes'),
@@ -225,7 +227,9 @@ builder.run(conf.args, function (err) {
         .update('footer', 0, 'footer', {
             message: 'Incubation ' + (err ? clicolor.red('FAILED') : clicolor.green('SUCCEEDED')) + ' at ' + endTime + ', took ' + ((endTime - startTime) / 1000) + 's'
         });
-    err && dashboard.term.fg.red().write(err.message).reset().write("\r\n");
+    (err ? (err.errors || [err]) : []).forEach(function (err) {
+        dashboard.term.fg.red().write(err.message).reset().write("\r\n");    
+    });
     dashboard.term.write("\r\n");
     process.exit(err ? 1 : 0);
 });
