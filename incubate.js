@@ -12,7 +12,7 @@ var cfg = {
     cacheDir: conf.query('package.cache'),
     parallel: conf.query('parallel'),
     parallelMax: conf.query('parallelMax'),
-    cleanBuild: conf.query('cleanBuild')
+    cleanBuild: conf.query('clean')
 };
 
 if (!cfg.pkgPaths) {
