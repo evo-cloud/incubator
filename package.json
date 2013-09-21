@@ -1,7 +1,7 @@
 {
     "name": "incubator",
     "description": "System Builder",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "author": "Yisui Hu <easeway@gmail.com>",
     "keywords": [
         "build"
@@ -15,7 +15,9 @@
         "url": "https://github.com/evo-cloud/incubator"
     },
     "main": "./index.js",
-    "bin": "./incubate.js",
+    "bin": {
+        "incubate": "./incubate.js"
+    },
     "dependencies": {
         "js-class": "0.0.1",
         "js-yaml": "2.0.5",
@@ -28,7 +30,7 @@
         "term-dashboard": "0.0.2",
         "cli-color": "0.2.2",
         "http-get": "0.5.10",
-        "ftp-get": "0.3.1",
+        "ftp": "0.3.4",
         "evo-elements": "git://github.com/evo-cloud/elements"
     },
     "devDependencies": {
