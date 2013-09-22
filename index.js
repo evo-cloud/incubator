@@ -5,5 +5,7 @@ module.exports = {
     Downloader:  require('./lib/Downloader'),
     FileCache:   require('./lib/FileCache'),
     BuildEngine: require('./lib/BuildEngine'),
-    Builder:     require('./lib/Builder')
+    Builder:     require('./lib/Builder'),
+    TermLogger:  require('./lib/TermLogger'),
+    StreamLogger:require('./lib/StreamLogger')
 };
