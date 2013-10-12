@@ -6,7 +6,7 @@ var nomnom = require('nomnom'),
     TermLogger   = require('./index').TermLogger,
     StreamLogger = require('./index').StreamLogger;
 
-var cfg = { buildDir: '_build' };
+var cfg = { buildDir: process.env.INCUBATE_BUILD_DIR || '_build' };
 var opts = nomnom.script('incubate')
     .options({
         'package-path': {
@@ -79,12 +79,22 @@ var opts = nomnom.script('incubate')
     .parse();
 
 if (!cfg.pkgPaths) {
-    if (process.env.PACKAGE_PATH) {
-        cfg.pkgPaths = process.env.PACKAGE_PATH.split(':');
+    if (process.env.INCUBATE_PACKAGE_PATH) {
+        cfg.pkgPaths = process.env.INCUBATE_PACKAGE_PATH.split(':');
     } else {
-        console.error('No package path found, specify via --package-path or set PACKAGE_PATH.');
+        console.error('No package path found, specify via --package-path or set INCUBATE_PACKAGE_PATH.');
         process.exit(1);
     }
+}
+
+!cfg.cacheDir && process.env.INCUBATE_CACHE_DIR && (cfg.cacheDir = process.env.INCUBATE_CACHE_DIR);
+if (!cfg.parallel && process.env.INCUBATE_PARALLEL) {
+    var n = parseInt(process.env.INCUBATE_PARALLEL);
+    !isNaN(n) && n > 0 && (cfg.parallel = n);
+}
+if (!cfg.parallelMax && process.env.INCUBATE_PARALLEL_MAX) {
+    var n = parseInt(process.env.INCUBATE_PARALLEL_MAX);
+    !isNaN(n) && n > 0 && (cfg.parallelMax = n);
 }
 
 var builder = new Builder(cfg);
