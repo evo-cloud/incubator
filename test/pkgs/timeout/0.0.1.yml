@@ -1,0 +1,10 @@
+---
+package:
+    name: timeout
+    version: 0.0.1
+
+build:
+    - engine: shell
+      timeout: 1
+      commands:
+        - sleep 3

@@ -39,6 +39,15 @@ var opts = nomnom.script('incubate')
                 cfg.cacheDir = val;
             }
         },
+        'release-dir': {
+            help: 'Directory for build output (releases)',
+            metavar: 'DIR',
+            type: 'string',
+            required: false,
+            callback: function (val) {
+                cfg.relDir = val;
+            }
+        },
         'parallel': {
             abbr: 'n',
             help: 'Number of workers to work in parallel',
@@ -88,6 +97,7 @@ if (!cfg.pkgPaths) {
 }
 
 !cfg.cacheDir && process.env.INCUBATE_CACHE_DIR && (cfg.cacheDir = process.env.INCUBATE_CACHE_DIR);
+!cfg.relDir && process.env.INCUBATE_RELEASE_DIR && (cfg.relDir = process.env.INCUBATE_RELEASE_DIR);
 if (!cfg.parallel && process.env.INCUBATE_PARALLEL) {
     var n = parseInt(process.env.INCUBATE_PARALLEL);
     !isNaN(n) && n > 0 && (cfg.parallel = n);
