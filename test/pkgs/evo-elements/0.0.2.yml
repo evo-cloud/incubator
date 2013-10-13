@@ -8,6 +8,9 @@ sources:
       origins:
         - http://github.com/evo-cloud/elements/archive/master.zip
 
+    - scm: git
+      repo: http://github.com/evo-cloud/elements
+
 build:
     - engine: shell
       commands:

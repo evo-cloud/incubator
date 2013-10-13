@@ -10,6 +10,10 @@ sources:
       origins:
         - http://github.com/evo-cloud/neuron/archive/master.zip
 
+    - scm: git
+      repo: http://github.com/evo-cloud/neuron
+      checkout: 092f7e87ec115e135b23308ac2b3220f678c4596
+      
 build:
     - engine: shell
       commands:
