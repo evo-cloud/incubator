@@ -1,7 +1,7 @@
 {
     "name": "incubator",
     "description": "System Builder",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "author": "Yisui Hu <easeway@gmail.com>",
     "keywords": [
         "build"

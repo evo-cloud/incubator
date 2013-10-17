@@ -20,6 +20,7 @@ Options
 - `--parallel=N`: optional, explicitly specify the number of tasks to run in parallel
 - `--parallel-max=N`: optional, limit the number of parallel run tasks, default is number of CPUs on the system
 - `--clean`: optional, when specified, all packages are re-built, without checking changes of depended files/packages
+- `--save-space`: optional, delete intermediate files when a package is successfully built to use as less disk space as possible
 - `--script`: optional, display in log format, regardless whether current output is a TTY.
 
 ### Packages
@@ -65,7 +66,7 @@ sources:
 build:
     - commands:
         - tar zxf $_SRCDIR/my-sample-source.tar.gz
-    
+
     - workdir: my-sample-source
       paths:
         - dep: my-sample-tools
@@ -82,9 +83,9 @@ build:
 - `version`: mandatory, version of the package, must be consistent with this YAML file;
 - `dependencies`: optional, specifies all packages this one depends on.
 
-For `dependencies`, it is a list. 
+For `dependencies`, it is a list.
 The item can be a single string representing a simple package name and the latest version will be matched,
-or a key/value pair matches a package name with a version request. 
+or a key/value pair matches a package name with a version request.
 Refer to [semver](http://semver.org) for how to request a version.
 
 ##### Source files
@@ -163,8 +164,8 @@ For each of depended packages, engine defines an environment variable like:
 _DEP_PACKAGENAME=full-qualified-package-name
 ```
 
-Here `PACKAGENAME` as part of the variable name is derived from package name without version 
-by capitalizing all alphabetic characters and replacing `-` with `_`. 
+Here `PACKAGENAME` as part of the variable name is derived from package name without version
+by capitalizing all alphabetic characters and replacing `-` with `_`.
 This is quite useful when some build commands reference the output of a depended package, like:
 
 ```yaml

@@ -78,6 +78,14 @@ var opts = nomnom.script('incubate')
                 cfg.cleanBuild = val;
             }
         },
+        'save-space': {
+            help: 'Use as less disk space as possible (all intermediate files will be deleted)',
+            flag: true,
+            default: false,
+            callback: function (val) {
+                cfg.saveSpace = val;
+            }
+        },
         'script': {
             abbr: 's',
             help: 'Output plain logs',
