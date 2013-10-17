@@ -11,12 +11,23 @@ npm install incubator
 incubate --package-path=path pkg1 pkg2 ...
 ```
 
+Options
+
+- `--package-path=PATH`: mandatory, path to lookup packages, and specify multiple times for multiple paths
+- `--build-dir=PATH`: optional, base directory for generating intermediate build outputs, default is `_build` under current directory
+- `--release-dir=PATH`: optional, base directory for final build outputs, default is `rel` under `build-dir`
+- `--package-cache=PATH`: optional, directory for caching downloaded files, default is `cache` under `build-dir`
+- `--parallel=N`: optional, explicitly specify the number of tasks to run in parallel
+- `--parallel-max=N`: optional, limit the number of parallel run tasks, default is number of CPUs on the system
+- `--clean`: optional, when specified, all packages are re-built, without checking changes of depended files/packages
+- `--script`: optional, display in log format, regardless whether current output is a TTY.
+
 ### Packages
 
 #### Full Qualified Package Name
 
 A full qualified package name includes the package name and suffixed with a version.
-Like `incubator-0.0.7`. The version part follows [semver](http://semver.org).
+Like `incubator-0.0.7`. The version part conforms to [semver](http://semver.org).
 
 When a package is referenced, either a package name or the full qualified package name is used.
 If only a package name is used, **Incubator** will match it with the latest version.
@@ -110,7 +121,18 @@ Other keys are version control system specific, for `git`:
 
 ##### Build Steps
 
-`build` is a list of steps each containing a list of commands. Here are several keys pre-defined:
+`build` is a list of steps each managed by an engine specified by key `engine`.
+
+E.g.
+
+```yaml
+build:
+    engine: shell
+```
+
+All other keys are engine-specific configurations.
+The only engine currently supported is `shell` which is also default (`engine` is not specified).
+It defines following keys:
 
 - `workdir`: enter the directory before executing the commands;
 - `commands`: a list of shell commands to be executed;
@@ -118,6 +140,45 @@ Other keys are version control system specific, for `git`:
 - `paths`: add sub-directory under release directory of depended packages are added to environment `PATH`:
     - `dep`: the depended package name
     - `dir`: sub-directory under the release directory
+- `envPrefix`: prefix for all generated environment variable names, not including those specified in `env`
+
+The `shell` engine prepares a number of environment variables whose names can be prefixed by `envPrefix` if specified:
+
+- `_BLDSLOT`: id of parallel execution slot running the command, the number is zero-based;
+- `_BLDBASE`: base directory for intermediate output files from all packages;
+- `_BLDDIR`: directory for intermediate outputs from current package, it is `$_BLDBASE/full-qualified-package-name`;
+- `_RELBASE`: base directory for final output files from all packages;
+- `_RELDIR`: directory for final outputs from current package, it is `$_RELBASE/full-qualified-package-name`;
+- `_SRCDIR`: cache directory, `$_SRCDIR/filename` can be used to locate a downloaded file;
+- `_PKGDIR`: directory containing package definition file;
+- `_PKGFILE`: path pointing to package definition file;
+- `_PKGDEPS`: a list of full qualified names of depended packages, one per line.
+
+If `envPrefix` is specified on this step, the environment variables above will be prefixed with the value.
+E.g. if `envPrefix` is `SAMPLE`, the `SAMPLE_PKGDIR` should be used instead of `_PKGDIR`.
+
+For each of depended packages, engine defines an environment variable like:
+
+```bash
+_DEP_PACKAGENAME=full-qualified-package-name
+```
+
+Here `PACKAGENAME` as part of the variable name is derived from package name without version 
+by capitalizing all alphabetic characters and replacing `-` with `_`. 
+This is quite useful when some build commands reference the output of a depended package, like:
+
+```yaml
+---
+package:
+    ...
+    dependencies:
+      - my-dep
+
+build:
+    - commands:
+        - tar zxf $_RELBASE/$_DEP_MY_DEP/output.tar.gz
+...
+```
 
 ##### Real Projects
 
