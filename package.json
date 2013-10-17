@@ -1,10 +1,10 @@
 {
     "name": "incubator",
-    "description": "System Builder",
-    "version": "0.0.7",
+    "description": "A package-based parallel build system",
+    "version": "0.0.8",
     "author": "Yisui Hu <easeway@gmail.com>",
     "keywords": [
-        "build"
+        "build", "gruntplugin"
     ],
     "scripts": {
         "start": "node incubate",

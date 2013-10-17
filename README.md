@@ -181,9 +181,48 @@ build:
 ...
 ```
 
-##### Real Projects
+### Real Projects
 
 Refer to Evo Cloud [stemcell](https://github/evo-cloud/stemcell) which uses **Incubator** to build Linux OS from scratch.
+
+### Grunt Plugin
+
+**Incubator** can be directly used as a [grunt](http://gruntjs.com) plugin:
+
+In `package.json`:
+
+```json
+...
+    "devDependencies": {
+        "incubator": "*",
+        "grunt": "*"
+    }
+...
+```
+
+In `Gruntfile.js`:
+
+```javascript
+
+module.exports = function (grunt) {
+    grunt.initConfig({
+        incubator: {
+            path: __dirname + '/packages',  // mandatory, array is also ok
+            options: {  // all optional
+                'build-dir': __dirname + '/_build',
+                'package-cache': __dirname + '/_cache',
+                'release-dir': __dirname + '/_rels',
+                'clean': true,
+                'save-space': true,
+                'script': true
+            }
+        }
+    });
+    grunt.loadNpmTasks('incubator');
+    grunt.registerTask('default', 'incubate:my-pkg1:my-pkg2');
+};
+
+```
 
 ### License
 
