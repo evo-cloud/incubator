@@ -1,7 +1,7 @@
 {
     "name": "incubator",
     "description": "A package-based parallel build system",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "author": "Yisui Hu <easeway@gmail.com>",
     "keywords": [
         "build", "gruntplugin"

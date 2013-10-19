@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
-var nomnom = require('nomnom'),
+var Class  = require('js-class'),
+    fs     = require('fs'),
+    async  = require('async'),
+    nomnom = require('nomnom'),
 
     Builder      = require('./index').Builder,
     TermLogger   = require('./index').TermLogger,
     StreamLogger = require('./index').StreamLogger;
 
-var cfg = { buildDir: process.env.INCUBATE_BUILD_DIR || '_build' };
+var cfg = { buildDir: process.env.INCUBATE_BUILD_DIR || '_build', logs: [] };
 var opts = nomnom.script('incubate')
     .options({
         'package-path': {
@@ -91,6 +94,38 @@ var opts = nomnom.script('incubate')
             help: 'Output plain logs',
             flag: true,
             default: false
+        },
+        'log': {
+            abbr: 'l',
+            help: 'Also logs to file (overwrite)',
+            metavar: 'FILE',
+            type: 'string',
+            required: false,
+            callback: function (val) {
+                var fd = fs.openSync(val, 'w');
+                cfg.logs.push(fs.createWriteStream(null, { fd: fd }));
+            }
+        },
+        'log-append': {
+            help: 'Also logs to file (append)',
+            metavar: 'FILE',
+            type: 'string',
+            required: false,
+            callback: function (val) {
+                var fd = fs.openSync(val, 'a');
+                cfg.logs.push(fs.createWriteStream(null, { fd: fd }));
+            }
+        },
+        'version': {
+            abbr: 'v',
+            help: 'Display version and exit',
+            flag: true,
+            callback: function (val) {
+                if (val) {
+                    process.stdout.write(require('./package.json').version + "\n");
+                    process.exit(0);
+                }
+            }
         }
     })
     .parse();
@@ -115,8 +150,31 @@ if (!cfg.parallelMax && process.env.INCUBATE_PARALLEL_MAX) {
     !isNaN(n) && n > 0 && (cfg.parallelMax = n);
 }
 
+var SplitLogger = Class({
+    constructor: function () {
+        this._loggers = [];
+        ['start', 'packages', 'notify', 'complete'].forEach(function (method) {
+            this[method] = function () {
+                var args = arguments;
+                this._loggers.forEach(function (logger) {
+                    logger[method].apply(logger, args);
+                });
+            };
+        }, this);
+    },
+
+    add: function (logger) {
+        this._loggers.push(logger);
+    }
+});
+
 var builder = new Builder(cfg);
-var logger = (!opts.script && process.stdout.isTTY) ? new TermLogger(builder) : new StreamLogger(builder, process.stdout);
+var logger = new SplitLogger();
+logger.add((!opts.script && process.stdout.isTTY) ? new TermLogger(builder)
+                                                  : new StreamLogger(builder, process.stdout));
+cfg.logs.forEach(function (stream) {
+    logger.add(new StreamLogger(builder, stream));
+});
 
 builder
     .on('packages', function (packages) { logger.packages(packages); })
@@ -127,5 +185,9 @@ logger.start(new Date());
 builder.run(opts._, function (err) {
     var endTime = new Date();
     logger.complete(err, endTime);
-    process.exit(err ? 1 : 0);
+    async.each(cfg.logs, function (stream, next) {
+        stream.end(function () { next(); });
+    }, function () {
+        process.exit(err ? 1 : 0);
+    });
 });
